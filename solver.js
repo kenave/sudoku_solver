@@ -3,7 +3,7 @@ function solver(sudoku){
   takes in a 2d array representation of a sudoku
     format is [[row], [row], [row], [row], [row], [row], [row], [row], [row]]
     empty spaces are represented by 0
-  recursive function? maybe we can refactor after we get it working
+  recursive function!
   returns the solved sudoku
 
   basic sudoku rules:
@@ -87,15 +87,16 @@ function solver(sudoku){
 
   // need a helper function to check if a number is valid if placed in a specific position
   // can start with checking for a number in the first row and column and square
-  function possible(x, y, num) { // x and y are 0 indexed columns and rows of the sudoku
-    if (sudoku[y][x] !== 0) return false
+  function possible(y, x, num) { // x and y are 0 indexed columns and rows of the sudoku
+    // if (sudoku[y][x] !== 0) return false
+    // not necessary with check in solve function
     if (checkInColumn(x, num)) return false
     if (checkInRow(y, num)) return false
-    const x0 = Math.ceil((x) / 3)
+    const x0 = Math.floor((x) / 3) + 1
     const y0 = Math.ceil((y+1) / 3)
-    console.log(x0, y0)
+    // console.log(x0, y0)
     const square = x0 + (3 * (y0-1))
-    console.log(square)
+    // console.log(square)
     if (checkInSquare(square, num)) return false
     return true
   }
@@ -103,6 +104,45 @@ function solver(sudoku){
   // console.log(possible(0, 0, 6)) // false
   // console.log(possible(8, 8, 4)) // true
   // console.log(possible(2, 6, 3)) // false
+
+  let count = 0
+  function solve() {
+    for (let y = 0; y < 9; y++){
+      for (let x = 0; x < 9; x++){
+        if(sudoku[y][x] === 0) {
+          for (let n = 1; n <= 9; n++){
+            if (possible(y,x,n)) {
+              sudoku[y][x] = n
+              // console.log(`set number ${n}`)
+              solve()
+              // console.log('that wasnt right')
+              sudoku[y][x] = 0 // backtracking to reset the number
+            }
+          }
+          return
+        }
+      }
+    }
+    return print(++count)
+  }
+
+  function print(count = 0) {
+    console.log(`
+    ${count ? `   Solution ${count}:`: '   Puzzle:'}
+
+    ${sudoku[0]}
+    ${sudoku[1]}
+    ${sudoku[2]}
+    ${sudoku[3]}
+    ${sudoku[4]}
+    ${sudoku[5]}
+    ${sudoku[6]}
+    ${sudoku[7]}
+    ${sudoku[8]}
+    `)
+  }
+
+  solve()
 
 }
 
@@ -118,6 +158,22 @@ let sudoku_easy = [
     [0, 5, 0, 0, 0, 3, 2, 0, 0], // 7
     [0, 3, 0, 9, 0, 0, 8, 0, 0]  // 8
 ]
+
+let sudoku_easy_modified = [
+  //x  0  1  2  3  4  5  6  7  8      y
+      [0, 0, 1, 2, 5, 7, 6, 0, 0], // 0
+      [0, 2, 6, 0, 1, 4, 0, 9, 8], // 1
+      [0, 0, 7, 0, 0, 0, 0, 0, 1], // 2
+      [0, 1, 0, 5, 6, 9, 4, 8, 0], // 3
+      [7, 0, 5, 1, 4, 0, 9, 3, 0], // 4
+      [4, 0, 0, 0, 0, 0, 0, 6, 0], // 5
+      [6, 0, 0, 0, 8, 0, 0, 0, 9], // 6
+      [0, 5, 0, 0, 0, 3, 0, 0, 0], // 7
+      [0, 3, 0, 0, 0, 0, 0, 0, 0]  // 8
+  ]
+
+solver(sudoku_easy)
+solver(sudoku_easy_modified) // to show extra solutions
 
 let sudoku_medium = [
   [0, 0, 0, 0, 0, 5, 8, 9, 1],
@@ -155,4 +211,6 @@ let sudoku_expert = [
   [1, 0, 7, 0, 0, 0, 0, 5, 0]
 ]
 
-solver(sudoku_easy)
+// solver(sudoku_expert)
+
+// solver(sudoku_easy)
