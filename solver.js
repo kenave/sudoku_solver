@@ -27,15 +27,15 @@ function solver(sudoku){
     i.e. columns are represented by the second index */
 
     for (let i = 0; i < 9; i++){
-      if (sudoku[i][column - 1] === target) return true
+      if (sudoku[i][column] === target) return true
     }
     return false
   }
 
   function checkInRow(row, target){
     // checks for a target number in the specified row of the sudoku array, returns bool
-    for (let i = 0; i < 9; i++){
-      if (sudoku[row - 1][i] === target) return true
+    for (let i = 0; i < 10; i++){
+      if (sudoku[row][i] === target) return true
     }
     return false
   }
@@ -69,9 +69,9 @@ function solver(sudoku){
       [0,3], [3,3], [6,3],
       [0,6], [3,6], [6,6]
     ]
-    const lowerBoundX = squareArray[square - 1][0]
+    const lowerBoundX = squareArray[square-1][0]
     const upperBoundX = lowerBoundX + 3
-    const lowerBoundY = squareArray[square - 1][1]
+    const lowerBoundY = squareArray[square-1][1]
     const upperBoundY = lowerBoundY + 3
 
     for (let row = lowerBoundX; row < upperBoundX; row++) {
@@ -85,36 +85,38 @@ function solver(sudoku){
   
   const completed = 45  // summation of 1 to 9 may be a useful check for completed rows, columns, and squares
 
-  // now to do the solving part
+  // need a helper function to check if a number is valid if placed in a specific position
   // can start with checking for a number in the first row and column and square
-  function possible(x, y, num) {
+  function possible(x, y, num) { // x and y are 0 indexed columns and rows of the sudoku
     if (sudoku[y][x] !== 0) return false
     if (checkInColumn(x, num)) return false
     if (checkInRow(y, num)) return false
-    const x0 = Math.ceil((x-1) / 3)
-    const y0 = Math.ceil((y-1) / 3)
+    const x0 = Math.ceil((x) / 3)
+    const y0 = Math.ceil((y+1) / 3)
+    console.log(x0, y0)
     const square = x0 + (3 * (y0-1))
+    console.log(square)
     if (checkInSquare(square, num)) return false
     return true
   }
 
-  console.log(possible(2, 3, 6)) // false
-  console.log(possible(5, 8, 9)) // false
-  console.log(possible(5, 8, 7)) // true
+  // console.log(possible(0, 0, 6)) // false
+  // console.log(possible(8, 8, 4)) // true
+  // console.log(possible(2, 6, 3)) // false
 
 }
 
 let sudoku_easy = [
-//x  1  2  3  4  5  6  7  8  9      y
-    [0, 9, 1, 2, 5, 7, 6, 0, 0], // 1
-    [0, 2, 6, 0, 1, 4, 0, 9, 8], // 2
-    [0, 0, 7, 0, 0, 0, 0, 0, 1], // 3
-    [0, 1, 0, 5, 6, 9, 4, 8, 0], // 4
-    [7, 0, 5, 1, 4, 0, 9, 3, 0], // 5
-    [4, 0, 0, 0, 0, 0, 0, 6, 0], // 6
-    [6, 0, 0, 0, 8, 0, 0, 0, 9], // 7
-    [0, 5, 0, 0, 0, 3, 2, 0, 0], // 8
-    [0, 3, 0, 9, 0, 0, 8, 0, 0]  // 9
+//x  0  1  2  3  4  5  6  7  8      y
+    [0, 9, 1, 2, 5, 7, 6, 0, 0], // 0
+    [0, 2, 6, 0, 1, 4, 0, 9, 8], // 1
+    [0, 0, 7, 0, 0, 0, 0, 0, 1], // 2
+    [0, 1, 0, 5, 6, 9, 4, 8, 0], // 3
+    [7, 0, 5, 1, 4, 0, 9, 3, 0], // 4
+    [4, 0, 0, 0, 0, 0, 0, 6, 0], // 5
+    [6, 0, 0, 0, 8, 0, 0, 0, 9], // 6
+    [0, 5, 0, 0, 0, 3, 2, 0, 0], // 7
+    [0, 3, 0, 9, 0, 0, 8, 0, 0]  // 8
 ]
 
 let sudoku_medium = [
