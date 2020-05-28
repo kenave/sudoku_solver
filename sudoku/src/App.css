@@ -20,6 +20,15 @@
   flex-direction: column;
 }
 
+.button-nav {
+  display: flex;
+  margin-top: 1%;
+}
+
+.button {
+  margin: 1%;
+}
+
 .square {
   background: #fff;
   border: 1px solid #999;
